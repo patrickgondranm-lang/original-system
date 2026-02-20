@@ -1,0 +1,31 @@
+{
+  "name": "original-system",
+  "version": "1.0.0",
+  "description": "Sistema de Gerenciamento de Licenças com Painel Administrativo",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "serve": "npx http-server -p 8000 -o"
+  },
+  "keywords": [
+    "license",
+    "key",
+    "management",
+    "admin",
+    "dashboard",
+    "supabase"
+  ],
+  "author": "Original System",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "private"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
