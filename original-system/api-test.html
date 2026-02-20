@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API de Validação - Original System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+            margin: 15px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 API de Validação de Licenças</h1>
+        <p class="subtitle">Original System - Teste sua integração</p>
+
+        <!-- Teste Prático -->
+        <div class="section">
+            <h2>🧪 Teste Prático</h2>
+            <form id="testForm">
+                <div class="form-group">
+                    <label for="licenseKey">Chave da Licença:</label>
+                    <input type="text" id="licenseKey" placeholder="ORIG-XXXX-XXXX-XXXX-XXXX" required>
+                </div>
+                <button type="submit">Validar Licença</button>
+            </form>
+
+            <div id="result" class="result"></div>
+        </div>
+
+        <!-- Documentação -->
+        <div class="section">
+            <h2>📖 Documentação da API</h2>
+            
+            <h3>Endpoint: Validar Licença</h3>
+            <div class="code-block">
+                <strong>Método:</strong> <span class="badge badge-success">SQL Function</span><br>
+                <strong>Nome:</strong> <code>validate_license(license_key)</code>
+            </div>
+
+            <h4>Exemplo de Uso:</h4>
+            <pre>-- SQL
+SELECT * FROM validate_license('ORIG-XXXX-XXXX-XXXX-XXXX');</pre>
+
+            <h4>JavaScript (Supabase):</h4>
+            <pre>// Validar licença
+const { data, error } = await supabase
+    .rpc('validate_license', {
+        p_license_key: 'ORIG-XXXX-XXXX-XXXX-XXXX'
+    });
+
+if (data && data[0].is_valid) {
+    console.log('Licença válida!');
+    console.log('Expira em:', data[0].expires_at);
+} else {
+    console.log('Licença inválida:', data[0].message);
+}</pre>
+
+            <h4>Resposta (Sucesso):</h4>
+            <pre>{
+  "is_valid": true,
+  "license_id": "uuid-da-licenca",
+  "user_email": "cliente@email.com",
+  "expires_at": "2025-03-20T10:30:00.000Z",
+  "max_devices": 2,
+  "active_devices": 1,
+  "message": "Licença válida"
+}</pre>
+
+            <h4>Resposta (Erro):</h4>
+            <pre>{
+  "is_valid": false,
+  "license_id": null,
+  "user_email": null,
+  "expires_at": null,
+  "max_devices": null,
+  "active_devices": null,
+  "message": "Licença não encontrada"
+}</pre>
+
+            <h4>Possíveis Mensagens de Erro:</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mensagem</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Licença não encontrada</td>
+                        <td>A chave não existe no banco</td>
+                    </tr>
+                    <tr>
+                        <td>Licença inativa</td>
+                        <td>A licença foi desativada</td>
+                    </tr>
+                    <tr>
+                        <td>Licença expirada</td>
+                        <td>A data de expiração passou</td>
+                    </tr>
+                    <tr>
+                        <td>Status da licença: suspended</td>
+                        <td>A licença foi suspensa</td>
+                    </tr>
+                    <tr>
+                        <td>Status da licença: revoked</td>
+                        <td>A licença foi revogada</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Exemplo de Integração -->
+        <div class="section">
+            <h2>💡 Exemplo de Integração Completa</h2>
+            
+            <h3>1. Instalação do Supabase Client:</h3>
+            <pre>npm install @supabase/supabase-js</pre>
+
+            <h3>2. Configuração:</h3>
+            <pre>import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'https://vqrwjassqebxjtnzppku.supabase.co'
+const supabaseKey = 'SUA_ANON_KEY'
+const supabase = createClient(supabaseUrl, supabaseKey)</pre>
+
+            <h3>3. Validar ao Iniciar seu Software:</h3>
+            <pre>async function validateOnStartup() {
+    const licenseKey = getLicenseKeyFromStorage();
+    
+    if (!licenseKey) {
+        showLicenseActivationScreen();
+        return;
+    }
+    
+    const { data, error } = await supabase
+        .rpc('validate_license', {
+            p_license_key: licenseKey
+        });
+    
+    if (error || !data[0].is_valid) {
+        showLicenseExpiredScreen(data[0].message);
+        return;
+    }
+    
+    // Licença válida - iniciar software
+    startApplication();
+}</pre>
+
+            <h3>4. Registrar Uso do Dispositivo:</h3>
+            <pre>async function registerDevice(licenseId) {
+    const deviceId = getDeviceId(); // Gerar ID único do dispositivo
+    
+    // Inserir ou atualizar uso
+    const { data, error } = await supabase
+        .from('license_usage')
+        .upsert({
+            license_id: licenseId,
+            device_id: deviceId,
+            device_name: getDeviceName(),
+            device_type: getDeviceType(),
+            ip_address: await getIpAddress(),
+            last_used_at: new Date().toISOString()
+        });
+}</pre>
+        </div>
+
+        <!-- Status Codes -->
+        <div class="section">
+            <h2>📊 Status da Licença</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Descrição</th>
+                        <th>Pode Usar?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-success">active</span></td>
+                        <td>Licença ativa e válida</td>
+                        <td>✅ Sim</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-danger">expired</span></td>
+                        <td>Data de expiração passou</td>
+                        <td>❌ Não</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-danger">suspended</span></td>
+                        <td>Temporariamente suspensa</td>
+                        <td>❌ Não</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-danger">revoked</span></td>
+                        <td>Permanentemente revogada</td>
+                        <td>❌ Não</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tipos de Licença -->
+        <div class="section">
+            <h2>🎫 Tipos de Licença</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Duração</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>trial</strong></td>
+                        <td>7 dias</td>
+                        <td>Período de teste gratuito</td>
+                    </tr>
+                    <tr>
+                        <td><strong>monthly</strong></td>
+                        <td>30 dias</td>
+                        <td>Assinatura mensal</td>
+                    </tr>
+                    <tr>
+                        <td><strong>yearly</strong></td>
+                        <td>365 dias</td>
+                        <td>Assinatura anual</td>
+                    </tr>
+                    <tr>
+                        <td><strong>lifetime</strong></td>
+                        <td>Ilimitado</td>
+                        <td>Licença permanente</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabaseConfig } from './config/supabase.config.js';
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey);
+
+        document.getElementById('testForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const licenseKey = document.getElementById('licenseKey').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = 'Validando...';
+
+            try {
+                const { data, error } = await supabase
+                    .rpc('validate_license', {
+                        p_license_key: licenseKey
+                    });
+
+                if (error) throw error;
+
+                const result = data[0];
+
+                if (result.is_valid) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <h3>✅ Licença Válida!</h3>
+                        <table>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Valor</th>
+                            </tr>
+                            <tr>
+                                <td><strong>ID da Licença:</strong></td>
+                                <td>${result.license_id}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Email do Usuário:</strong></td>
+                                <td>${result.user_email || 'Não atribuído'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Expira em:</strong></td>
+                                <td>${result.expires_at ? new Date(result.expires_at).toLocaleString('pt-BR') : 'Nunca'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Max Dispositivos:</strong></td>
+                                <td>${result.max_devices}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dispositivos Ativos:</strong></td>
+                                <td>${result.active_devices}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status:</strong></td>
+                                <td>${result.message}</td>
+                            </tr>
+                        </table>
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `
+                        <h3>❌ Licença Inválida</h3>
+                        <p><strong>Motivo:</strong> ${result.message}</p>
+                    `;
+                }
+
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Erro ao Validar</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
